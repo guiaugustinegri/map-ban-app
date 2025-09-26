@@ -10,7 +10,8 @@ export async function GET() {
         id, slug, teamA_name, teamB_name, teamA_token, teamB_token,
         map_pool, bans, current_turn, state, created_at, finished_at
         FROM matches 
-        ORDER BY created_at DESC`
+        ORDER BY created_at DESC`,
+      args: []
     })
 
     const matches = result.rows.map((row: any) => {
