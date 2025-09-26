@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS matches (
   teamB_token TEXT NOT NULL,
   map_pool TEXT NOT NULL, -- JSON array
   bans TEXT NOT NULL, -- JSON array
-  current_turn TEXT NOT NULL CHECK (current_turn IN ('A', 'B')),
+  current_turn TEXT CHECK (current_turn IN ('A', 'B') OR current_turn IS NULL),
   state TEXT NOT NULL CHECK (state IN ('created', 'in_progress', 'finished')),
   created_at TEXT NOT NULL,
   finished_at TEXT

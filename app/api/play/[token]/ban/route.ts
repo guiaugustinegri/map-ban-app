@@ -206,7 +206,7 @@ export async function POST(
             WHERE id = ?`,
           args: [
             JSON.stringify(updatedBans),
-            '', // current_turn vazio quando finaliza
+            null, // current_turn NULL quando finaliza
             newState,
             finishedAt,
             match.id
