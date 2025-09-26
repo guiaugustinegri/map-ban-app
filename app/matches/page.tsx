@@ -28,6 +28,7 @@ export default function MatchesPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
 
   const fetchMatches = async () => {
     try {
@@ -56,16 +57,30 @@ export default function MatchesPage() {
     return Array.from(teams).sort()
   }
 
-  // Filtrar partidas baseado na dupla selecionada
-  const filterMatches = (selectedTeam: string) => {
-    if (!selectedTeam || selectedTeam === 'all') {
-      setFilteredMatches(matches)
-      return
+  // Filtrar partidas baseado na dupla e status selecionados
+  const filterMatches = (selectedTeam: string, selectedStatus: string) => {
+    let filtered = matches
+
+    // Filtro por dupla
+    if (selectedTeam && selectedTeam !== 'all') {
+      filtered = filtered.filter(match => 
+        match.teamA_name === selectedTeam || match.teamB_name === selectedTeam
+      )
     }
 
-    const filtered = matches.filter(match => 
-      match.teamA_name === selectedTeam || match.teamB_name === selectedTeam
-    )
+    // Filtro por status
+    if (selectedStatus && selectedStatus !== 'all') {
+      if (selectedStatus === 'open') {
+        // Abertas: criadas ou em andamento
+        filtered = filtered.filter(match => 
+          match.state === 'created' || match.state === 'in_progress'
+        )
+      } else if (selectedStatus === 'finished') {
+        // Finalizadas
+        filtered = filtered.filter(match => match.state === 'finished')
+      }
+    }
+
     setFilteredMatches(filtered)
   }
 
@@ -73,7 +88,14 @@ export default function MatchesPage() {
   const handleTeamChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedTeam = e.target.value
     setSearchTerm(selectedTeam)
-    filterMatches(selectedTeam)
+    filterMatches(selectedTeam, statusFilter)
+  }
+
+  // Atualizar filtro quando o status selecionado muda
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedStatus = e.target.value
+    setStatusFilter(selectedStatus)
+    filterMatches(searchTerm, selectedStatus)
   }
 
   useEffect(() => {
@@ -86,8 +108,8 @@ export default function MatchesPage() {
 
   // Atualizar filtro quando matches mudam
   useEffect(() => {
-    filterMatches(searchTerm)
-  }, [matches, searchTerm])
+    filterMatches(searchTerm, statusFilter)
+  }, [matches, searchTerm, statusFilter])
 
   const getStateText = (state: string) => {
     switch (state) {
@@ -135,54 +157,107 @@ export default function MatchesPage() {
     <div className="container">
       <h1>Todas as Partidas</h1>
       
-      {/* Filtro por dupla */}
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{ 
-          display: 'block', 
-          marginBottom: '8px', 
-          fontWeight: '600', 
-          color: '#555' 
-        }}>
-          🔍 Filtrar por dupla:
-        </label>
-        <select
-          value={searchTerm}
-          onChange={handleTeamChange}
-          style={{
-            width: '100%',
-            padding: '12px 16px',
-            border: '2px solid #ddd',
-            borderRadius: '8px',
-            fontSize: '16px',
-            backgroundColor: '#f8f9fa',
-            cursor: 'pointer'
-          }}
-        >
-          <option value="all">Todas as duplas</option>
-          {getUniqueTeams().map(team => (
-            <option key={team} value={team}>
-              {team}
-            </option>
-          ))}
-        </select>
-        {searchTerm && searchTerm !== 'all' && (
-          <div style={{ 
-            marginTop: '8px', 
-            fontSize: '14px', 
-            color: '#666',
-            textAlign: 'center'
+      {/* Filtros */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: '1fr 1fr', 
+        gap: '20px', 
+        marginBottom: '20px' 
+      }}>
+        {/* Filtro por status */}
+        <div>
+          <label style={{ 
+            display: 'block', 
+            marginBottom: '8px', 
+            fontWeight: '600', 
+            color: '#555' 
           }}>
-            {filteredMatches.length} partida(s) encontrada(s) para "{searchTerm}"
-          </div>
-        )}
+            📊 Status:
+          </label>
+          <select
+            value={statusFilter}
+            onChange={handleStatusChange}
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              border: '2px solid #ddd',
+              borderRadius: '8px',
+              fontSize: '16px',
+              backgroundColor: '#f8f9fa',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="all">Todas as partidas</option>
+            <option value="open">Abertas (não finalizadas)</option>
+            <option value="finished">Finalizadas</option>
+          </select>
+        </div>
+
+        {/* Filtro por dupla */}
+        <div>
+          <label style={{ 
+            display: 'block', 
+            marginBottom: '8px', 
+            fontWeight: '600', 
+            color: '#555' 
+          }}>
+            🔍 Dupla:
+          </label>
+          <select
+            value={searchTerm}
+            onChange={handleTeamChange}
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              border: '2px solid #ddd',
+              borderRadius: '8px',
+              fontSize: '16px',
+              backgroundColor: '#f8f9fa',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="all">Todas as duplas</option>
+            {getUniqueTeams().map(team => (
+              <option key={team} value={team}>
+                {team}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+
+      {/* Contador de resultados */}
+      {(searchTerm !== 'all' || statusFilter !== 'all') && (
+        <div style={{ 
+          marginBottom: '20px', 
+          fontSize: '14px', 
+          color: '#666',
+          textAlign: 'center',
+          backgroundColor: '#e8f4f8',
+          padding: '10px',
+          borderRadius: '6px'
+        }}>
+          {filteredMatches.length} partida(s) encontrada(s)
+          {searchTerm !== 'all' && ` para "${searchTerm}"`}
+          {statusFilter !== 'all' && (
+            statusFilter === 'open' ? ' (abertas)' : ' (finalizadas)'
+          )}
+        </div>
+      )}
 
       {filteredMatches.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>
-          {searchTerm && searchTerm !== 'all' ? (
+          {(searchTerm !== 'all' || statusFilter !== 'all') ? (
             <>
-              <h3>Nenhuma partida encontrada para "{searchTerm}"</h3>
-              <p>Tente selecionar outra dupla ou "Todas as duplas"</p>
+              <h3>Nenhuma partida encontrada</h3>
+              <p>
+                {searchTerm !== 'all' && `para a dupla "${searchTerm}"`}
+                {searchTerm !== 'all' && statusFilter !== 'all' && ' e '}
+                {statusFilter !== 'all' && (
+                  statusFilter === 'open' ? 'que estejam abertas' : 'que estejam finalizadas'
+                )}
+              </p>
+              <p>Tente ajustar os filtros acima</p>
             </>
           ) : (
             <>

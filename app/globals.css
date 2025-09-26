@@ -523,4 +523,10 @@ button:disabled {
     min-width: 100px !important;
     font-size: 12px !important;
   }
+  
+  /* Filters responsive */
+  .container div[style*="gridTemplateColumns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
 }
