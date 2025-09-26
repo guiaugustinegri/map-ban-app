@@ -46,25 +46,34 @@ export default function MatchesPage() {
     }
   }
 
-  // Filtrar partidas baseado no termo de busca
-  const filterMatches = (term: string) => {
-    if (!term.trim()) {
+  // Extrair lista única de duplas dos matches
+  const getUniqueTeams = () => {
+    const teams = new Set<string>()
+    matches.forEach(match => {
+      teams.add(match.teamA_name)
+      teams.add(match.teamB_name)
+    })
+    return Array.from(teams).sort()
+  }
+
+  // Filtrar partidas baseado na dupla selecionada
+  const filterMatches = (selectedTeam: string) => {
+    if (!selectedTeam || selectedTeam === 'all') {
       setFilteredMatches(matches)
       return
     }
 
     const filtered = matches.filter(match => 
-      match.teamA_name.toLowerCase().includes(term.toLowerCase()) ||
-      match.teamB_name.toLowerCase().includes(term.toLowerCase())
+      match.teamA_name === selectedTeam || match.teamB_name === selectedTeam
     )
     setFilteredMatches(filtered)
   }
 
-  // Atualizar filtro quando o termo de busca muda
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value
-    setSearchTerm(term)
-    filterMatches(term)
+  // Atualizar filtro quando a dupla selecionada muda
+  const handleTeamChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedTeam = e.target.value
+    setSearchTerm(selectedTeam)
+    filterMatches(selectedTeam)
   }
 
   useEffect(() => {
@@ -126,40 +135,73 @@ export default function MatchesPage() {
     <div className="container">
       <h1>Todas as Partidas</h1>
       
-      {/* Campo de busca */}
+      {/* Filtro por dupla */}
       <div style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          placeholder="🔍 Buscar por dupla (ex: Rage, Potato, etc.)"
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '8px', 
+          fontWeight: '600', 
+          color: '#555' 
+        }}>
+          🔍 Filtrar por dupla:
+        </label>
+        <select
           value={searchTerm}
-          onChange={handleSearchChange}
+          onChange={handleTeamChange}
           style={{
             width: '100%',
             padding: '12px 16px',
             border: '2px solid #ddd',
             borderRadius: '8px',
             fontSize: '16px',
-            backgroundColor: '#f8f9fa'
+            backgroundColor: '#f8f9fa',
+            cursor: 'pointer'
           }}
-        />
+        >
+          <option value="all">Todas as duplas</option>
+          {getUniqueTeams().map(team => (
+            <option key={team} value={team}>
+              {team}
+            </option>
+          ))}
+        </select>
+        {searchTerm && searchTerm !== 'all' && (
+          <div style={{ 
+            marginTop: '8px', 
+            fontSize: '14px', 
+            color: '#666',
+            textAlign: 'center'
+          }}>
+            {filteredMatches.length} partida(s) encontrada(s) para "{searchTerm}"
+          </div>
+        )}
       </div>
 
       {filteredMatches.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>
-          <h3>Nenhuma partida encontrada</h3>
-          <p>Crie sua primeira partida para começar!</p>
-          <Link href="/" style={{ 
-            textDecoration: 'none',
-            backgroundColor: '#3498db',
-            color: 'white',
-            padding: '10px 20px',
-            borderRadius: '4px',
-            fontWeight: '600',
-            display: 'inline-block',
-            marginTop: '20px'
-          }}>
-            Criar Partida
-          </Link>
+          {searchTerm && searchTerm !== 'all' ? (
+            <>
+              <h3>Nenhuma partida encontrada para "{searchTerm}"</h3>
+              <p>Tente selecionar outra dupla ou "Todas as duplas"</p>
+            </>
+          ) : (
+            <>
+              <h3>Nenhuma partida encontrada</h3>
+              <p>Crie sua primeira partida para começar!</p>
+              <Link href="/" style={{ 
+                textDecoration: 'none',
+                backgroundColor: '#3498db',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '4px',
+                fontWeight: '600',
+                display: 'inline-block',
+                marginTop: '20px'
+              }}>
+                Criar Partida
+              </Link>
+            </>
+          )}
         </div>
       ) : (
         <div style={{ 
