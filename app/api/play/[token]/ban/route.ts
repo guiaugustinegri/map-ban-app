@@ -40,7 +40,8 @@ export async function GET(
       current_turn: match.current_turn,
       remaining,
       final_map: remaining.length === 1 ? remaining[0] : null,
-      public_url: `/bans/${match.slug}`
+      public_url: `/bans/${match.slug}`,
+      bans
     })
   } catch (error) {
     console.error('Error fetching play state:', error)
@@ -155,6 +156,7 @@ export async function POST(
     let finishedAt: string | null = null
 
     // Se restar apenas 1 mapa após este ban, finalizar a partida
+    // (quando alguém bane o penúltimo mapa, o último fica como escolhido)
     if (remaining.length === 1) {
       newState = 'finished'
       finishedAt = new Date().toISOString()

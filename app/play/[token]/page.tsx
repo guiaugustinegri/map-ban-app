@@ -13,6 +13,11 @@ interface PlayData {
   remaining: string[]
   final_map: string | null
   public_url: string
+  bans: Array<{
+    map: string
+    by: 'A' | 'B'
+    at: string
+  }>
 }
 
 export default function PlayPage() {
@@ -218,6 +223,42 @@ export default function PlayPage() {
               }
             </div>
           )}
+        </div>
+      )}
+
+      {/* Seção de Mapas Banidos */}
+      {playData.bans && playData.bans.length > 0 && (
+        <div style={{ marginTop: '30px' }}>
+          <h2>Mapas Banidos</h2>
+          <div className="maps-grid">
+            {playData.bans.map((ban, index) => (
+              <div key={index} className="map-card banned">
+                <div className="map-name" style={{ position: 'relative' }}>
+                  {ban.map}
+                  <div style={{
+                    position: 'absolute',
+                    top: '-5px',
+                    right: '-5px',
+                    backgroundColor: '#e74c3c',
+                    color: 'white',
+                    borderRadius: '50%',
+                    width: '20px',
+                    height: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    fontWeight: 'bold'
+                  }}>
+                    ✕
+                  </div>
+                </div>
+                <div className="map-info">
+                  Banido por: {ban.by === 'A' ? playData.teamName : playData.opponentName}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
