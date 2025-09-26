@@ -29,6 +29,9 @@ export default function AdminPage() {
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteMode, setDeleteMode] = useState<'selected' | 'all' | null>(null)
+  const [showBulkCreate, setShowBulkCreate] = useState(false)
+  const [bulkJson, setBulkJson] = useState('')
+  const [creating, setCreating] = useState(false)
 
   const fetchMatches = async () => {
     try {
@@ -106,6 +109,52 @@ export default function AdminPage() {
     setShowDeleteConfirm(true)
   }
 
+  const handleBulkCreate = async () => {
+    if (!bulkJson.trim()) {
+      alert('Por favor, insira o JSON das partidas')
+      return
+    }
+
+    setCreating(true)
+    try {
+      const matchesData = JSON.parse(bulkJson)
+      
+      if (!Array.isArray(matchesData)) {
+        throw new Error('JSON deve ser um array de partidas')
+      }
+
+      const response = await fetch('/api/admin/matches', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ matches: matchesData })
+      })
+
+      if (!response.ok) {
+        throw new Error('Erro ao criar partidas')
+      }
+
+      const result = await response.json()
+      
+      // Atualizar a lista
+      await fetchMatches()
+      setBulkJson('')
+      setShowBulkCreate(false)
+      
+      let message = `${result.created} partida(s) criada(s) com sucesso!`
+      if (result.errors && result.errors.length > 0) {
+        message += `\n\nErros:\n${result.errors.join('\n')}`
+      }
+      
+      alert(message)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Erro ao criar partidas')
+    } finally {
+      setCreating(false)
+    }
+  }
+
   const confirmDelete = async () => {
     setDeleting(true)
     try {
@@ -181,7 +230,22 @@ export default function AdminPage() {
       }}>
         <h3 style={{ margin: '0 0 15px 0', color: '#e74c3c' }}>⚠️ Ações de Administração</h3>
         
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '15px' }}>
+          <button
+            onClick={() => setShowBulkCreate(!showBulkCreate)}
+            style={{
+              backgroundColor: '#27ae60',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            {showBulkCreate ? 'Cancelar' : '➕ Criar Partidas em Massa'}
+          </button>
+          
           <button
             onClick={handleSelectAll}
             style={{
@@ -233,6 +297,91 @@ export default function AdminPage() {
             Deletar TODAS ({matches.length})
           </button>
         </div>
+
+        {/* Interface de Criação em Massa */}
+        {showBulkCreate && (
+          <div style={{ 
+            backgroundColor: '#e8f5e8', 
+            padding: '15px', 
+            borderRadius: '6px',
+            border: '1px solid #27ae60'
+          }}>
+            <h4 style={{ margin: '0 0 10px 0', color: '#27ae60' }}>📝 Criar Partidas em Massa</h4>
+            <p style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#666' }}>
+              Cole o JSON com as partidas. Formato:
+            </p>
+            <pre style={{ 
+              backgroundColor: '#f8f9fa', 
+              padding: '10px', 
+              borderRadius: '4px', 
+              fontSize: '12px',
+              margin: '0 0 10px 0',
+              overflow: 'auto'
+            }}>
+{`[
+  {
+    "teamA_name": "Rage + Ruddah",
+    "teamB_name": "Potato + Kinghead"
+  },
+  {
+    "teamA_name": "Gaia + Reload",
+    "teamB_name": "Fear + Kingwitcher",
+    "map_pool": ["AWOKEN", "BLOOD RUN", "CORRUPTED KEEP"],
+    "first_turn": "A"
+  }
+]`}
+            </pre>
+            <textarea
+              value={bulkJson}
+              onChange={(e) => setBulkJson(e.target.value)}
+              placeholder="Cole o JSON das partidas aqui..."
+              style={{
+                width: '100%',
+                height: '150px',
+                padding: '10px',
+                border: '2px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px',
+                fontFamily: 'monospace',
+                marginBottom: '10px'
+              }}
+            />
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleBulkCreate}
+                disabled={creating || !bulkJson.trim()}
+                style={{
+                  backgroundColor: creating ? '#bdc3c7' : '#27ae60',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  cursor: creating ? 'not-allowed' : 'pointer',
+                  fontSize: '14px'
+                }}
+              >
+                {creating ? 'Criando...' : 'Criar Partidas'}
+              </button>
+              <button
+                onClick={() => {
+                  setBulkJson('')
+                  setShowBulkCreate(false)
+                }}
+                style={{
+                  backgroundColor: '#95a5a6',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '14px'
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modal de Confirmação */}
