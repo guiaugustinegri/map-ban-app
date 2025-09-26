@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 
 interface MatchData {
+  id: string
   slug: string
   teamA: string
   teamB: string
