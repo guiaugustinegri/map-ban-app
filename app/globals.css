@@ -1,0 +1,311 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+body {
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+h2 {
+  color: #34495e;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #555;
+}
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+.btn-success {
+  background-color: #27ae60;
+}
+
+.btn-success:hover {
+  background-color: #229954;
+}
+
+.status {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.status.created {
+  background-color: #f39c12;
+  color: white;
+}
+
+.status.in_progress {
+  background-color: #3498db;
+  color: white;
+}
+
+.status.finished {
+  background-color: #27ae60;
+  color: white;
+}
+
+.turn-indicator {
+  background-color: #ecf0f1;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.turn-indicator.current {
+  background-color: #3498db;
+  color: white;
+}
+
+.maps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.map-card {
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.map-card:hover {
+  border-color: #3498db;
+  transform: translateY(-2px);
+}
+
+.map-card.banned {
+  background-color: #e74c3c;
+  color: white;
+  border-color: #c0392b;
+}
+
+.map-card.final {
+  background-color: #27ae60;
+  color: white;
+  border-color: #229954;
+  font-weight: 600;
+}
+
+.map-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.map-info {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.bans-list {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.ban-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.ban-item:last-child {
+  border-bottom: none;
+}
+
+.ban-map {
+  font-weight: 600;
+}
+
+.ban-by {
+  color: #666;
+  font-size: 14px;
+}
+
+.ban-time {
+  color: #999;
+  font-size: 12px;
+}
+
+.links-section {
+  background-color: #ecf0f1;
+  border-radius: 6px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.link-item {
+  margin-bottom: 10px;
+}
+
+.link-label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.link-url {
+  background-color: white;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  word-break: break-all;
+  border: 1px solid #bdc3c7;
+}
+
+.copy-btn {
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.copy-btn:hover {
+  background-color: #7f8c8d;
+}
+
+.waiting {
+  text-align: center;
+  padding: 40px;
+  color: #7f8c8d;
+  font-size: 18px;
+}
+
+.error {
+  background-color: #e74c3c;
+  color: white;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.success {
+  background-color: #27ae60;
+  color: white;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+  
+  .maps-grid {
+    grid-template-columns: 1fr;
+  }
+}
