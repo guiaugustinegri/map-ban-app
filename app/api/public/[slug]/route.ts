@@ -28,6 +28,7 @@ export async function GET(
     )
 
     return NextResponse.json({
+      id: match.id,
       slug: match.slug,
       teamA: match.teamA_name,
       teamB: match.teamB_name,

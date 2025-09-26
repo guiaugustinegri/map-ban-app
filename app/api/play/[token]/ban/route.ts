@@ -154,6 +154,7 @@ export async function POST(
     let newState = match.state
     let finishedAt: string | null = null
 
+    // Se restar apenas 1 mapa após este ban, finalizar a partida
     if (remaining.length === 1) {
       newState = 'finished'
       finishedAt = new Date().toISOString()

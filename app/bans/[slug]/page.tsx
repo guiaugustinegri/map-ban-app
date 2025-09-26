@@ -25,6 +25,8 @@ export default function PublicMatchPage() {
   const [match, setMatch] = useState<MatchData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const fetchMatch = async () => {
     try {
@@ -68,6 +70,30 @@ export default function PublicMatchPage() {
     return new Date(isoString).toLocaleTimeString('pt-BR')
   }
 
+  const handleDeleteMatch = async () => {
+    if (!match) return
+    
+    setDeleting(true)
+    try {
+      const response = await fetch(`/api/matches/${match.id}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Erro ao deletar partida')
+      }
+
+      // Redirecionar para a página de partidas
+      window.location.href = '/matches'
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao deletar partida')
+    } finally {
+      setDeleting(false)
+      setShowDeleteConfirm(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="container">
@@ -90,7 +116,16 @@ export default function PublicMatchPage() {
 
   return (
     <div className="container">
-      <h1>{match.teamA} vs {match.teamB}</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1>{match.teamA} vs {match.teamB}</h1>
+        <button 
+          className="btn-danger"
+          onClick={() => setShowDeleteConfirm(true)}
+          style={{ width: 'auto', padding: '8px 16px' }}
+        >
+          🗑️ Deletar Partida
+        </button>
+      </div>
       
       <div className={`status ${match.state}`}>
         Status: {getStateText(match.state)}
@@ -145,6 +180,54 @@ export default function PublicMatchPage() {
       <div style={{ marginTop: '20px', textAlign: 'center', color: '#7f8c8d' }}>
         <p>Atualização automática a cada 2 segundos</p>
       </div>
+
+      {showDeleteConfirm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '30px',
+            borderRadius: '8px',
+            maxWidth: '400px',
+            width: '90%',
+            textAlign: 'center'
+          }}>
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja deletar esta partida?</p>
+            <p style={{ color: '#e74c3c', fontWeight: 'bold' }}>
+              Esta ação não pode ser desfeita!
+            </p>
+            <div style={{ marginTop: '20px' }}>
+              <button 
+                className="btn-danger"
+                onClick={handleDeleteMatch}
+                disabled={deleting}
+                style={{ marginRight: '10px', width: 'auto', padding: '10px 20px' }}
+              >
+                {deleting ? 'Deletando...' : 'Sim, Deletar'}
+              </button>
+              <button 
+                className="btn-secondary"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deleting}
+                style={{ width: 'auto', padding: '10px 20px' }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

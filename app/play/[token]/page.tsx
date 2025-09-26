@@ -163,8 +163,9 @@ export default function PlayPage() {
                     style={{
                       cursor: banning === map || showConfirm ? 'not-allowed' : 'pointer',
                       opacity: banning === map || showConfirm ? 0.6 : 1,
-                      backgroundColor: selectedMap === map ? '#3498db' : undefined,
-                      color: selectedMap === map ? 'white' : undefined
+                      backgroundColor: selectedMap === map ? '#e74c3c' : undefined,
+                      color: selectedMap === map ? 'white' : undefined,
+                      borderColor: selectedMap === map ? '#c0392b' : undefined
                     }}
                   >
                     <div className="map-name">{map}</div>
