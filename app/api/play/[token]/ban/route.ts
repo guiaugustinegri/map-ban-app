@@ -158,12 +158,21 @@ export async function POST(
     // Se restar apenas 1 mapa após este ban, finalizar a partida
     // (quando alguém bane o penúltimo mapa, o último fica como escolhido)
     if (remaining.length === 1) {
+      console.log('Finalizando partida - resta apenas 1 mapa:', remaining[0])
       newState = 'finished'
       finishedAt = new Date().toISOString()
       nextTurn = null
     }
 
     // Atualizar banco
+    console.log('Atualizando partida:', {
+      id: match.id,
+      newState,
+      nextTurn,
+      finishedAt,
+      remainingCount: remaining.length
+    })
+    
     await client.execute({
       sql: `UPDATE matches SET 
         bans = ?, 
@@ -173,9 +182,9 @@ export async function POST(
         WHERE id = ?`,
       args: [
         JSON.stringify(updatedBans),
-        nextTurn,
+        nextTurn || '',
         newState,
-        finishedAt,
+        finishedAt || null,
         match.id
       ]
     })
