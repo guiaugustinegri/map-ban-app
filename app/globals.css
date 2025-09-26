@@ -383,6 +383,27 @@ button:disabled {
   text-align: center;
 }
 
+.link-button {
+  transition: all 0.3s ease;
+}
+
+.link-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.link-button-blue:hover {
+  background-color: #2980b9 !important;
+}
+
+.link-button-red:hover {
+  background-color: #c0392b !important;
+}
+
+.link-button-green:hover {
+  background-color: #229954 !important;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 20px;

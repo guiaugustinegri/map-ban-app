@@ -175,6 +175,7 @@ export default function Home() {
                 href={result.public_url}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="link-button link-button-blue"
                 style={{ 
                   display: 'block',
                   padding: '12px',
@@ -186,8 +187,6 @@ export default function Home() {
                   fontWeight: '600',
                   transition: 'all 0.3s'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#2980b9'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#3498db'}
               >
                 Abrir Página Pública
               </a>
@@ -218,6 +217,7 @@ export default function Home() {
                 href={result.teamA_url}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="link-button link-button-red"
                 style={{ 
                   display: 'block',
                   padding: '12px',
@@ -229,8 +229,6 @@ export default function Home() {
                   fontWeight: '600',
                   transition: 'all 0.3s'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#c0392b'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#e74c3c'}
               >
                 Acessar {formData.teamA_name}
               </a>
@@ -261,6 +259,7 @@ export default function Home() {
                 href={result.teamB_url}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="link-button link-button-green"
                 style={{ 
                   display: 'block',
                   padding: '12px',
@@ -272,8 +271,6 @@ export default function Home() {
                   fontWeight: '600',
                   transition: 'all 0.3s'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#229954'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#27ae60'}
               >
                 Acessar {formData.teamB_name}
               </a>
