@@ -181,21 +181,61 @@ export default function MatchesPage() {
               {filteredMatches.map((match, index) => (
                 <tr key={match.id}>
                   <td>
-                    <div>
-                      <strong style={{ fontSize: '16px', color: '#2c3e50' }}>
-                        {match.teamA_name} vs {match.teamB_name}
-                      </strong>
-                      {match.state === 'finished' && match.final_map && (
-                        <div style={{ 
-                          marginTop: '5px', 
-                          fontSize: '14px', 
-                          color: '#27ae60',
-                          fontWeight: '600'
-                        }}>
-                          🏆 {match.final_map}
-                        </div>
-                      )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                      {/* Time A */}
+                      <div style={{
+                        backgroundColor: '#e74c3c',
+                        color: 'white',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        minWidth: '120px',
+                        textAlign: 'center'
+                      }}>
+                        {match.teamA_name}
+                      </div>
+                      
+                      {/* VS */}
+                      <div style={{
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        color: '#7f8c8d',
+                        minWidth: '30px',
+                        textAlign: 'center'
+                      }}>
+                        VS
+                      </div>
+                      
+                      {/* Time B */}
+                      <div style={{
+                        backgroundColor: '#27ae60',
+                        color: 'white',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        minWidth: '120px',
+                        textAlign: 'center'
+                      }}>
+                        {match.teamB_name}
+                      </div>
                     </div>
+                    
+                    {match.state === 'finished' && match.final_map && (
+                      <div style={{ 
+                        marginTop: '8px', 
+                        fontSize: '14px', 
+                        color: '#27ae60',
+                        fontWeight: '600',
+                        textAlign: 'center',
+                        backgroundColor: '#d5f4e6',
+                        padding: '4px 8px',
+                        borderRadius: '4px'
+                      }}>
+                        🏆 {match.final_map}
+                      </div>
+                    )}
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     <span 

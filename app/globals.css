@@ -508,4 +508,15 @@ button:disabled {
     font-size: 11px;
     padding: 4px 8px;
   }
+  
+  /* Team cards responsive */
+  .matches-table td div[style*="display: flex"] {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .matches-table td div[style*="minWidth: 120px"] {
+    min-width: 100px !important;
+    font-size: 12px !important;
+  }
 }
