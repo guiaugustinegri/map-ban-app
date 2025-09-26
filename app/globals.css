@@ -300,6 +300,76 @@ button:disabled {
   margin-bottom: 20px;
 }
 
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.match-card {
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.match-card:hover {
+  border-color: #3498db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 10px;
+}
+
+.match-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.match-status {
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.match-info {
+  margin-bottom: 15px;
+}
+
+.match-info p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 14px;
+}
+
+.final-map {
+  background-color: #27ae60;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.match-actions {
+  text-align: center;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 20px;
@@ -307,5 +377,15 @@ button:disabled {
   
   .maps-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .matches-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .match-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }

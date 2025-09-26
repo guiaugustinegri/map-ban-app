@@ -57,7 +57,20 @@ export default function Home() {
       }
 
       const data = await response.json()
-      setResult(data)
+      
+      if (data.exists) {
+        // Partida já existe
+        setResult({
+          ...data,
+          isExisting: true
+        })
+      } else {
+        // Nova partida criada
+        setResult({
+          ...data,
+          isExisting: false
+        })
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido')
     } finally {
@@ -71,7 +84,22 @@ export default function Home() {
 
   return (
     <div className="container">
-      <h1>Banimento de Mapas</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+        <h1>Banimento de Mapas</h1>
+        <a 
+          href="/matches" 
+          style={{ 
+            textDecoration: 'none',
+            backgroundColor: '#95a5a6',
+            color: 'white',
+            padding: '10px 20px',
+            borderRadius: '4px',
+            fontWeight: '600'
+          }}
+        >
+          Ver Todas as Partidas
+        </a>
+      </div>
       
       {error && (
         <div className="error">
@@ -81,9 +109,22 @@ export default function Home() {
 
       {result ? (
         <div>
-          <div className="success">
-            Partida criada com sucesso!
+          <div className={result.isExisting ? "status created" : "success"}>
+            {result.isExisting ? 'Partida já existe!' : 'Partida criada com sucesso!'}
           </div>
+          
+          {result.isExisting && (
+            <div style={{ 
+              backgroundColor: '#f39c12', 
+              color: 'white', 
+              padding: '15px', 
+              borderRadius: '4px', 
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              {result.message}
+            </div>
+          )}
           
           <h2>Links da Partida</h2>
           <div className="links-section">
