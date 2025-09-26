@@ -24,8 +24,10 @@ interface Match {
 
 export default function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([])
+  const [filteredMatches, setFilteredMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
 
   const fetchMatches = async () => {
     try {
@@ -35,12 +37,34 @@ export default function MatchesPage() {
       }
       const data = await response.json()
       setMatches(data)
+      setFilteredMatches(data)
       setError('')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao carregar partidas')
     } finally {
       setLoading(false)
     }
+  }
+
+  // Filtrar partidas baseado no termo de busca
+  const filterMatches = (term: string) => {
+    if (!term.trim()) {
+      setFilteredMatches(matches)
+      return
+    }
+
+    const filtered = matches.filter(match => 
+      match.teamA_name.toLowerCase().includes(term.toLowerCase()) ||
+      match.teamB_name.toLowerCase().includes(term.toLowerCase())
+    )
+    setFilteredMatches(filtered)
+  }
+
+  // Atualizar filtro quando o termo de busca muda
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value
+    setSearchTerm(term)
+    filterMatches(term)
   }
 
   useEffect(() => {
@@ -50,6 +74,11 @@ export default function MatchesPage() {
     const interval = setInterval(fetchMatches, 10000)
     return () => clearInterval(interval)
   }, [])
+
+  // Atualizar filtro quando matches mudam
+  useEffect(() => {
+    filterMatches(searchTerm)
+  }, [matches, searchTerm])
 
   const getStateText = (state: string) => {
     switch (state) {
@@ -96,8 +125,26 @@ export default function MatchesPage() {
   return (
     <div className="container">
       <h1>Todas as Partidas</h1>
+      
+      {/* Campo de busca */}
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          placeholder="🔍 Buscar por dupla (ex: Rage, Potato, etc.)"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            border: '2px solid #ddd',
+            borderRadius: '8px',
+            fontSize: '16px',
+            backgroundColor: '#f8f9fa'
+          }}
+        />
+      </div>
 
-      {matches.length === 0 ? (
+      {filteredMatches.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>
           <h3>Nenhuma partida encontrada</h3>
           <p>Crie sua primeira partida para começar!</p>
@@ -127,12 +174,11 @@ export default function MatchesPage() {
                 <th>Partida</th>
                 <th style={{ textAlign: 'center' }}>Status</th>
                 <th style={{ textAlign: 'center' }}>Progresso</th>
-                <th style={{ textAlign: 'center' }}>Criada em</th>
                 <th style={{ textAlign: 'center' }}>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {matches.map((match, index) => (
+              {filteredMatches.map((match, index) => (
                 <tr key={match.id}>
                   <td>
                     <div>
@@ -156,9 +202,9 @@ export default function MatchesPage() {
                       style={{ 
                         backgroundColor: getStateColor(match.state),
                         color: 'white',
-                        padding: '4px 12px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
+                        padding: '3px 8px',
+                        borderRadius: '8px',
+                        fontSize: '11px',
                         fontWeight: '600',
                         textTransform: 'uppercase'
                       }}
@@ -167,8 +213,8 @@ export default function MatchesPage() {
                     </span>
                     {match.state === 'in_progress' && (
                       <div style={{ 
-                        marginTop: '5px', 
-                        fontSize: '12px', 
+                        marginTop: '4px', 
+                        fontSize: '11px', 
                         color: '#666' 
                       }}>
                         Vez: {match.current_turn === 'A' ? match.teamA_name : match.teamB_name}
@@ -182,9 +228,6 @@ export default function MatchesPage() {
                     <div style={{ fontSize: '12px', color: '#666' }}>
                       mapas banidos
                     </div>
-                  </td>
-                  <td style={{ textAlign: 'center', fontSize: '14px' }}>
-                    {formatDate(match.created_at)}
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     <div className="action-buttons">
