@@ -20,7 +20,21 @@ async function pushSchema() {
     const schema = readFileSync(schemaPath, 'utf-8')
     console.log('📝 Schema content length:', schema.length)
     
-    await client.execute(schema)
+    // Dividir o schema em declarações individuais
+    const statements = schema
+      .split(';')
+      .map(stmt => stmt.trim())
+      .filter(stmt => stmt.length > 0)
+    
+    console.log(`🔧 Executing ${statements.length} SQL statements...`)
+    
+    // Executar cada declaração separadamente
+    for (let i = 0; i < statements.length; i++) {
+      const statement = statements[i]
+      console.log(`📝 Executing statement ${i + 1}/${statements.length}`)
+      await client.execute(statement)
+    }
+    
     console.log('✅ Database schema applied successfully')
   } catch (error) {
     console.error('❌ Error applying database schema:', error)
