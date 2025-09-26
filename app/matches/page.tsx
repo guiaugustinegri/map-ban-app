@@ -155,7 +155,7 @@ export default function MatchesPage() {
 
   return (
     <div className="container">
-      <h1>Todas as Partidas</h1>
+      <h1>Partidas - Pick & Bans</h1>
       
       {/* Filtros */}
       <div style={{ 
