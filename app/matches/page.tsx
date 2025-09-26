@@ -90,19 +90,7 @@ export default function MatchesPage() {
 
   return (
     <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h1>Todas as Partidas</h1>
-        <Link href="/" style={{ 
-          textDecoration: 'none',
-          backgroundColor: '#3498db',
-          color: 'white',
-          padding: '10px 20px',
-          borderRadius: '4px',
-          fontWeight: '600'
-        }}>
-          + Nova Partida
-        </Link>
-      </div>
+      <h1>Todas as Partidas</h1>
 
       {matches.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#7f8c8d' }}>

@@ -31,6 +31,13 @@ export default function Home() {
     setError('')
     setResult(null)
 
+    // Validar se os times são diferentes
+    if (formData.teamA_name === formData.teamB_name) {
+      setError('Os times devem ser diferentes!')
+      setLoading(false)
+      return
+    }
+
     try {
       let mapPool = undefined
       
@@ -84,22 +91,7 @@ export default function Home() {
 
   return (
     <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h1>Banimento de Mapas</h1>
-        <a 
-          href="/matches" 
-          style={{ 
-            textDecoration: 'none',
-            backgroundColor: '#95a5a6',
-            color: 'white',
-            padding: '10px 20px',
-            borderRadius: '4px',
-            fontWeight: '600'
-          }}
-        >
-          Ver Todas as Partidas
-        </a>
-      </div>
+      <h1>Criar Nova Partida</h1>
       
       {error && (
         <div className="error">
@@ -220,9 +212,11 @@ export default function Home() {
             >
               <option value="">Selecione um time...</option>
               <optgroup label="RageCon #5">
-                {rageconTeams.map((team, index) => (
-                  <option key={index} value={team}>{team}</option>
-                ))}
+                {rageconTeams
+                  .filter(team => team !== formData.teamB_name)
+                  .map((team, index) => (
+                    <option key={index} value={team}>{team}</option>
+                  ))}
               </optgroup>
               <option value="custom">Custom (escrever nome)</option>
             </select>
@@ -247,9 +241,11 @@ export default function Home() {
             >
               <option value="">Selecione um time...</option>
               <optgroup label="RageCon #5">
-                {rageconTeams.map((team, index) => (
-                  <option key={index} value={team}>{team}</option>
-                ))}
+                {rageconTeams
+                  .filter(team => team !== formData.teamA_name)
+                  .map((team, index) => (
+                    <option key={index} value={team}>{team}</option>
+                  ))}
               </optgroup>
               <option value="custom">Custom (escrever nome)</option>
             </select>
