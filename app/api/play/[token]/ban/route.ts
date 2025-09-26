@@ -170,24 +170,49 @@ export async function POST(
       newState,
       nextTurn,
       finishedAt,
-      remainingCount: remaining.length
+      remainingCount: remaining.length,
+      updatedBansCount: updatedBans.length
     })
     
-    await client.execute({
-      sql: `UPDATE matches SET 
-        bans = ?, 
-        current_turn = ?, 
-        state = ?, 
-        finished_at = ?
-        WHERE id = ?`,
-      args: [
-        JSON.stringify(updatedBans),
-        nextTurn || '',
-        newState,
-        finishedAt || null,
-        match.id
-      ]
-    })
+    try {
+      if (newState === 'finished') {
+        // Quando finaliza, atualizar com finished_at
+        await client.execute({
+          sql: `UPDATE matches SET 
+            bans = ?, 
+            current_turn = ?, 
+            state = ?, 
+            finished_at = ?
+            WHERE id = ?`,
+          args: [
+            JSON.stringify(updatedBans),
+            '', // current_turn vazio quando finaliza
+            newState,
+            finishedAt,
+            match.id
+          ]
+        })
+      } else {
+        // Quando não finaliza, não atualizar finished_at
+        await client.execute({
+          sql: `UPDATE matches SET 
+            bans = ?, 
+            current_turn = ?, 
+            state = ?
+            WHERE id = ?`,
+          args: [
+            JSON.stringify(updatedBans),
+            nextTurn,
+            newState,
+            match.id
+          ]
+        })
+      }
+      console.log('Partida atualizada com sucesso')
+    } catch (dbError) {
+      console.error('Erro ao atualizar banco:', dbError)
+      throw dbError
+    }
 
     return NextResponse.json({
       ok: true,
