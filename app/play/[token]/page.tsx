@@ -12,7 +12,6 @@ interface PlayData {
   current_turn: 'A' | 'B' | null
   remaining: string[]
   final_map: string | null
-  public_url: string
   bans: Array<{
     map: string
     by: 'A' | 'B'
@@ -262,29 +261,6 @@ export default function PlayPage() {
         </div>
       )}
 
-      <div className="links-section">
-        <h3>Link Público</h3>
-        <div className="link-item">
-          <div className="link-label">Página de acompanhamento:</div>
-          <a 
-            href={window.location.origin + playData.public_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ 
-              display: 'block',
-              padding: '8px',
-              backgroundColor: 'white',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              color: '#3498db',
-              border: '1px solid #bdc3c7',
-              wordBreak: 'break-all'
-            }}
-          >
-            {window.location.origin + playData.public_url}
-          </a>
-        </div>
-      </div>
 
       <div style={{ marginTop: '20px', textAlign: 'center', color: '#7f8c8d' }}>
         <p>Atualização automática a cada 2 segundos</p>

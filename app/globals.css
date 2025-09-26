@@ -175,17 +175,21 @@ button:disabled {
 }
 
 .map-card {
-  background: #f8f9fa;
+  background: #ffffff;
   border: 2px solid #dee2e6;
   border-radius: 6px;
   padding: 15px;
   text-align: center;
   transition: all 0.3s;
+  color: #2c3e50;
+  font-weight: 600;
 }
 
 .map-card:hover {
   border-color: #3498db;
+  background-color: #e3f2fd;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
 }
 
 .map-card.banned {
