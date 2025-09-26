@@ -290,7 +290,6 @@ export default function MatchesPage() {
               <tr>
                 <th>Partida</th>
                 <th style={{ textAlign: 'center' }}>Status</th>
-                <th style={{ textAlign: 'center' }}>Progresso</th>
                 <th style={{ textAlign: 'center' }}>Ações</th>
               </tr>
             </thead>
@@ -377,14 +376,6 @@ export default function MatchesPage() {
                         Vez: {match.current_turn === 'A' ? match.teamA_name : match.teamB_name}
                       </div>
                     )}
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '14px', fontWeight: '600' }}>
-                      {match.bans_count}/{match.total_maps}
-                    </div>
-                    <div style={{ fontSize: '12px', color: '#666' }}>
-                      mapas banidos
-                    </div>
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     <div className="action-buttons">
