@@ -20,6 +20,8 @@ export default function PlayPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [banning, setBanning] = useState<string | null>(null)
+  const [selectedMap, setSelectedMap] = useState<string | null>(null)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const fetchPlayData = async () => {
     try {
@@ -45,15 +47,24 @@ export default function PlayPage() {
     return () => clearInterval(interval)
   }, [token])
 
-  const handleBan = async (map: string) => {
-    setBanning(map)
+  const handleMapSelect = (map: string) => {
+    setSelectedMap(map)
+    setShowConfirm(true)
+  }
+
+  const handleConfirmBan = async () => {
+    if (!selectedMap) return
+    
+    setBanning(selectedMap)
+    setShowConfirm(false)
+    
     try {
       const response = await fetch(`/api/play/${token}/ban`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ map }),
+        body: JSON.stringify({ map: selectedMap }),
       })
 
       if (!response.ok) {
@@ -67,7 +78,13 @@ export default function PlayPage() {
       setError(err instanceof Error ? err.message : 'Erro ao banir mapa')
     } finally {
       setBanning(null)
+      setSelectedMap(null)
     }
+  }
+
+  const handleCancelBan = () => {
+    setShowConfirm(false)
+    setSelectedMap(null)
   }
 
   const copyToClipboard = (text: string) => {
@@ -139,20 +156,56 @@ export default function PlayPage() {
                   <button
                     key={index}
                     className="map-card"
-                    onClick={() => handleBan(map)}
-                    disabled={banning === map}
+                    onClick={() => handleMapSelect(map)}
+                    disabled={banning === map || showConfirm}
                     style={{
-                      cursor: banning === map ? 'not-allowed' : 'pointer',
-                      opacity: banning === map ? 0.6 : 1
+                      cursor: banning === map || showConfirm ? 'not-allowed' : 'pointer',
+                      opacity: banning === map || showConfirm ? 0.6 : 1,
+                      backgroundColor: selectedMap === map ? '#3498db' : undefined,
+                      color: selectedMap === map ? 'white' : undefined
                     }}
                   >
                     <div className="map-name">{map}</div>
                     {banning === map && (
                       <div className="map-info">Banindo...</div>
                     )}
+                    {selectedMap === map && !banning && (
+                      <div className="map-info">Selecionado</div>
+                    )}
                   </button>
                 ))}
               </div>
+
+              {showConfirm && selectedMap && (
+                <div style={{ 
+                  marginTop: '20px', 
+                  padding: '20px', 
+                  backgroundColor: '#f8f9fa', 
+                  borderRadius: '8px',
+                  textAlign: 'center'
+                }}>
+                  <h3>Confirmar Banimento</h3>
+                  <p>Você tem certeza que quer banir o mapa <strong>{selectedMap}</strong>?</p>
+                  <div style={{ marginTop: '15px' }}>
+                    <button 
+                      className="btn-danger" 
+                      onClick={handleConfirmBan}
+                      disabled={banning === selectedMap}
+                      style={{ marginRight: '10px', width: 'auto', padding: '10px 20px' }}
+                    >
+                      {banning === selectedMap ? 'Banindo...' : 'Sim, Banir'}
+                    </button>
+                    <button 
+                      className="btn-secondary" 
+                      onClick={handleCancelBan}
+                      disabled={banning === selectedMap}
+                      style={{ width: 'auto', padding: '10px 20px' }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="waiting">

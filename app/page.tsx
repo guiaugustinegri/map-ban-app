@@ -7,8 +7,20 @@ export default function Home() {
     teamA_name: '',
     teamB_name: '',
     first_turn: 'random',
+    map_pool_type: 'default',
     map_pool: ''
   })
+
+  const rageconTeams = [
+    'Blizzard + Subzero',
+    'Doob + Voidpointer', 
+    'Fear + Kingwitcher',
+    'Gaia + Reload',
+    'Kolt + Coxudo',
+    'Potato + Kinghead',
+    'Rage + Ruddah',
+    'Talisman + Kenzo'
+  ]
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState('')
@@ -20,9 +32,11 @@ export default function Home() {
     setResult(null)
 
     try {
-      const mapPool = formData.map_pool
-        ? formData.map_pool.split('\n').map(m => m.trim()).filter(m => m)
-        : undefined
+      let mapPool = undefined
+      
+      if (formData.map_pool_type === 'custom' && formData.map_pool) {
+        mapPool = formData.map_pool.split('\n').map(m => m.trim()).filter(m => m)
+      }
 
       const response = await fetch('/api/matches', {
         method: 'POST',
@@ -121,6 +135,7 @@ export default function Home() {
                 teamA_name: '',
                 teamB_name: '',
                 first_turn: 'random',
+                map_pool_type: 'default',
                 map_pool: ''
               })
             }}
@@ -131,27 +146,57 @@ export default function Home() {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="teamA_name">Nome do Time A:</label>
-            <input
-              type="text"
+            <label htmlFor="teamA_name">Time A:</label>
+            <select
               id="teamA_name"
               value={formData.teamA_name}
               onChange={(e) => setFormData({...formData, teamA_name: e.target.value})}
               required
-              placeholder="Ex: Time Alpha"
-            />
+            >
+              <option value="">Selecione um time...</option>
+              <optgroup label="RageCon #5">
+                {rageconTeams.map((team, index) => (
+                  <option key={index} value={team}>{team}</option>
+                ))}
+              </optgroup>
+              <option value="custom">Custom (escrever nome)</option>
+            </select>
+            {formData.teamA_name === 'custom' && (
+              <input
+                type="text"
+                placeholder="Digite o nome do Time A"
+                value={formData.teamA_name === 'custom' ? '' : formData.teamA_name}
+                onChange={(e) => setFormData({...formData, teamA_name: e.target.value})}
+                style={{ marginTop: '10px' }}
+              />
+            )}
           </div>
 
           <div className="form-group">
-            <label htmlFor="teamB_name">Nome do Time B:</label>
-            <input
-              type="text"
+            <label htmlFor="teamB_name">Time B:</label>
+            <select
               id="teamB_name"
               value={formData.teamB_name}
               onChange={(e) => setFormData({...formData, teamB_name: e.target.value})}
               required
-              placeholder="Ex: Time Beta"
-            />
+            >
+              <option value="">Selecione um time...</option>
+              <optgroup label="RageCon #5">
+                {rageconTeams.map((team, index) => (
+                  <option key={index} value={team}>{team}</option>
+                ))}
+              </optgroup>
+              <option value="custom">Custom (escrever nome)</option>
+            </select>
+            {formData.teamB_name === 'custom' && (
+              <input
+                type="text"
+                placeholder="Digite o nome do Time B"
+                value={formData.teamB_name === 'custom' ? '' : formData.teamB_name}
+                onChange={(e) => setFormData({...formData, teamB_name: e.target.value})}
+                style={{ marginTop: '10px' }}
+              />
+            )}
           </div>
 
           <div className="form-group">
@@ -168,13 +213,24 @@ export default function Home() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="map_pool">Pool de Mapas (opcional, um por linha):</label>
-            <textarea
-              id="map_pool"
-              value={formData.map_pool}
-              onChange={(e) => setFormData({...formData, map_pool: e.target.value})}
-              placeholder="AWOKEN&#10;BLOOD COVENANT&#10;BLOOD RUN&#10;...&#10;&#10;Deixe vazio para usar pool padrão"
-            />
+            <label htmlFor="map_pool_type">Pool de Mapas:</label>
+            <select
+              id="map_pool_type"
+              value={formData.map_pool_type}
+              onChange={(e) => setFormData({...formData, map_pool_type: e.target.value})}
+            >
+              <option value="default">Mapas Padrão</option>
+              <option value="custom">Custom (escrever lista)</option>
+            </select>
+            {formData.map_pool_type === 'custom' && (
+              <textarea
+                id="map_pool"
+                value={formData.map_pool}
+                onChange={(e) => setFormData({...formData, map_pool: e.target.value})}
+                placeholder="AWOKEN&#10;BLOOD COVENANT&#10;BLOOD RUN&#10;...&#10;&#10;Um mapa por linha"
+                style={{ marginTop: '10px' }}
+              />
+            )}
           </div>
 
           <button type="submit" disabled={loading}>
