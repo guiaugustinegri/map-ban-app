@@ -148,9 +148,9 @@ export async function POST(
     )
 
     // Determinar próximo turno e estado
-    let nextTurn = team === 'A' ? 'B' : 'A'
+    let nextTurn: string | null = team === 'A' ? 'B' : 'A'
     let newState = match.state
-    let finishedAt = null
+    let finishedAt: string | null = null
 
     if (remaining.length === 1) {
       newState = 'finished'
