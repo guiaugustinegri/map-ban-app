@@ -126,6 +126,7 @@ export async function POST(
       ban.map.toLowerCase() === map.toLowerCase()
     )
     if (alreadyBanned) {
+      console.log('❌ Mapa já banido:', map)
       return NextResponse.json(
         { error: 'Mapa já foi banido' },
         { status: 400 }
@@ -136,6 +137,14 @@ export async function POST(
     const exactMap = map_pool.find((m: string) => 
       m.toLowerCase() === map.toLowerCase()
     )
+
+    if (!exactMap) {
+      console.log('❌ Mapa exato não encontrado:', map, 'em:', map_pool)
+      return NextResponse.json(
+        { error: 'Mapa não encontrado na pool' },
+        { status: 400 }
+      )
+    }
 
     // Adicionar ban
     const newBan = {
@@ -150,6 +159,15 @@ export async function POST(
       !updatedBans.some((ban: any) => ban.map === m)
     )
 
+    console.log('Debug banimento:', {
+      mapBanido: exactMap,
+      mapasAntes: map_pool.length,
+      bansAntes: bans.length,
+      bansDepois: updatedBans.length,
+      mapasRestantes: remaining.length,
+      mapasRestantesLista: remaining
+    })
+
     // Determinar próximo turno e estado
     let nextTurn: string | null = team === 'A' ? 'B' : 'A'
     let newState = match.state
@@ -158,10 +176,12 @@ export async function POST(
     // Se restar apenas 1 mapa após este ban, finalizar a partida
     // (quando alguém bane o penúltimo mapa, o último fica como escolhido)
     if (remaining.length === 1) {
-      console.log('Finalizando partida - resta apenas 1 mapa:', remaining[0])
+      console.log('🎯 FINALIZANDO PARTIDA - Mapa escolhido:', remaining[0])
       newState = 'finished'
       finishedAt = new Date().toISOString()
       nextTurn = null
+    } else {
+      console.log('⏳ Partida continua - Próximo turno:', nextTurn)
     }
 
     // Atualizar banco
