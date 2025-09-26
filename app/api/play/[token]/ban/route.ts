@@ -23,7 +23,8 @@ export async function GET(
     const match = result.rows[0]
     const isTeamA = match.teamA_token === token
     const team = isTeamA ? 'A' : 'B'
-    const opponent = isTeamA ? match.teamB_name : match.teamA_name
+    const teamName = isTeamA ? match.teamA_name : match.teamB_name
+    const opponentName = isTeamA ? match.teamB_name : match.teamA_name
     
     const map_pool = JSON.parse(match.map_pool as string)
     const bans = JSON.parse(match.bans as string)
@@ -33,7 +34,8 @@ export async function GET(
 
     return NextResponse.json({
       team,
-      opponent,
+      teamName,
+      opponentName,
       state: match.state,
       current_turn: match.current_turn,
       remaining,

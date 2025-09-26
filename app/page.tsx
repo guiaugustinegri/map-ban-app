@@ -89,41 +89,65 @@ export default function Home() {
           <div className="links-section">
             <div className="link-item">
               <div className="link-label">Página Pública (Acompanhamento):</div>
-              <div className="link-url">
+              <a 
+                href={result.public_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ 
+                  display: 'block',
+                  padding: '8px',
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  color: '#3498db',
+                  border: '1px solid #bdc3c7',
+                  wordBreak: 'break-all'
+                }}
+              >
                 {result.public_url}
-                <button 
-                  className="copy-btn" 
-                  onClick={() => copyToClipboard(result.public_url)}
-                >
-                  Copiar
-                </button>
-              </div>
+              </a>
             </div>
             
             <div className="link-item">
-              <div className="link-label">Time A (Ação):</div>
-              <div className="link-url">
+              <div className="link-label">{formData.teamA_name} (Ação):</div>
+              <a 
+                href={result.teamA_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ 
+                  display: 'block',
+                  padding: '8px',
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  color: '#3498db',
+                  border: '1px solid #bdc3c7',
+                  wordBreak: 'break-all'
+                }}
+              >
                 {result.teamA_url}
-                <button 
-                  className="copy-btn" 
-                  onClick={() => copyToClipboard(result.teamA_url)}
-                >
-                  Copiar
-                </button>
-              </div>
+              </a>
             </div>
             
             <div className="link-item">
-              <div className="link-label">Time B (Ação):</div>
-              <div className="link-url">
+              <div className="link-label">{formData.teamB_name} (Ação):</div>
+              <a 
+                href={result.teamB_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ 
+                  display: 'block',
+                  padding: '8px',
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  color: '#3498db',
+                  border: '1px solid #bdc3c7',
+                  wordBreak: 'break-all'
+                }}
+              >
                 {result.teamB_url}
-                <button 
-                  className="copy-btn" 
-                  onClick={() => copyToClipboard(result.teamB_url)}
-                >
-                  Copiar
-                </button>
-              </div>
+              </a>
             </div>
           </div>
 

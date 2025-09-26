@@ -6,6 +6,8 @@ import { useParams } from 'next/navigation'
 interface PlayData {
   team: 'A' | 'B'
   opponent: string
+  teamName: string
+  opponentName: string
   state: 'in_progress' | 'finished'
   current_turn: 'A' | 'B' | null
   remaining: string[]
@@ -116,10 +118,10 @@ export default function PlayPage() {
 
   return (
     <div className="container">
-      <h1>Ação do Time {playData.team}</h1>
+      <h1>Ação do {playData.teamName}</h1>
       
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <p><strong>Adversário:</strong> {playData.opponent}</p>
+        <p><strong>Adversário:</strong> {playData.opponentName}</p>
       </div>
 
       {playData.state === 'finished' && playData.final_map ? (
@@ -140,7 +142,7 @@ export default function PlayPage() {
 
           {playData.state === 'in_progress' && (
             <div className={`turn-indicator ${isMyTurn ? 'current' : ''}`}>
-              Vez de: {playData.current_turn === 'A' ? 'Time A' : 'Time B'}
+              {isMyTurn ? '🎯 SUA VEZ' : '⏳ ESPERE'}
             </div>
           )}
 
@@ -222,15 +224,23 @@ export default function PlayPage() {
         <h3>Link Público</h3>
         <div className="link-item">
           <div className="link-label">Página de acompanhamento:</div>
-          <div className="link-url">
-            {playData.public_url}
-            <button 
-              className="copy-btn" 
-              onClick={() => copyToClipboard(playData.public_url)}
-            >
-              Copiar
-            </button>
-          </div>
+          <a 
+            href={window.location.origin + playData.public_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ 
+              display: 'block',
+              padding: '8px',
+              backgroundColor: 'white',
+              borderRadius: '4px',
+              textDecoration: 'none',
+              color: '#3498db',
+              border: '1px solid #bdc3c7',
+              wordBreak: 'break-all'
+            }}
+          >
+            {window.location.origin + playData.public_url}
+          </a>
         </div>
       </div>
 
