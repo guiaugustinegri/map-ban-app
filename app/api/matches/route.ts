@@ -14,6 +14,8 @@ export async function GET() {
       args: []
     })
 
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    
     const matches = result.rows.map((row: any) => {
       const map_pool = JSON.parse(row.map_pool)
       const bans = JSON.parse(row.bans)
@@ -26,13 +28,18 @@ export async function GET() {
         slug: row.slug,
         teamA_name: row.teamA_name,
         teamB_name: row.teamB_name,
+        teamA_token: row.teamA_token,
+        teamB_token: row.teamB_token,
         state: row.state,
         current_turn: row.current_turn,
         created_at: row.created_at,
         finished_at: row.finished_at,
         final_map: remaining.length === 1 ? remaining[0] : null,
         bans_count: bans.length,
-        total_maps: map_pool.length
+        total_maps: map_pool.length,
+        public_url: `${baseUrl}/bans/${row.slug}`,
+        teamA_url: `${baseUrl}/play/${row.teamA_token}`,
+        teamB_url: `${baseUrl}/play/${row.teamB_token}`
       }
     })
 

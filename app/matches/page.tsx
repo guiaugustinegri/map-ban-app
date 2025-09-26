@@ -8,6 +8,8 @@ interface Match {
   slug: string
   teamA_name: string
   teamB_name: string
+  teamA_token: string
+  teamB_token: string
   state: 'created' | 'in_progress' | 'finished'
   current_turn: 'A' | 'B' | null
   created_at: string
@@ -15,6 +17,9 @@ interface Match {
   final_map: string | null
   bans_count: number
   total_maps: number
+  public_url: string
+  teamA_url: string
+  teamB_url: string
 }
 
 export default function MatchesPage() {
@@ -110,57 +115,109 @@ export default function MatchesPage() {
           </Link>
         </div>
       ) : (
-        <div className="matches-grid">
-          {matches.map((match) => (
-            <div key={match.id} className="match-card">
-              <div className="match-header">
-                <h3>{match.teamA_name} vs {match.teamB_name}</h3>
-                <div 
-                  className="match-status"
-                  style={{ backgroundColor: getStateColor(match.state) }}
-                >
-                  {getStateText(match.state)}
-                </div>
-              </div>
-
-              <div className="match-info">
-                <p><strong>Criada em:</strong> {formatDate(match.created_at)}</p>
-                
-                {match.state === 'in_progress' && (
-                  <p><strong>Vez de:</strong> {match.current_turn === 'A' ? match.teamA_name : match.teamB_name}</p>
-                )}
-                
-                {match.state === 'finished' && match.finished_at && (
-                  <p><strong>Finalizada em:</strong> {formatDate(match.finished_at)}</p>
-                )}
-
-                <p><strong>Progresso:</strong> {match.bans_count}/{match.total_maps} mapas banidos</p>
-                
-                {match.state === 'finished' && match.final_map && (
-                  <div className="final-map">
-                    <strong>🏆 Mapa Final:</strong> {match.final_map}
-                  </div>
-                )}
-              </div>
-
-              <div className="match-actions">
-                <Link 
-                  href={`/bans/${match.slug}`}
-                  style={{
-                    textDecoration: 'none',
-                    backgroundColor: '#3498db',
-                    color: 'white',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                    fontWeight: '600'
-                  }}
-                >
-                  Ver Partida
-                </Link>
-              </div>
-            </div>
-          ))}
+        <div style={{ 
+          backgroundColor: 'white', 
+          borderRadius: '8px', 
+          overflow: 'hidden',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}>
+          <table className="matches-table">
+            <thead>
+              <tr>
+                <th>Partida</th>
+                <th style={{ textAlign: 'center' }}>Status</th>
+                <th style={{ textAlign: 'center' }}>Progresso</th>
+                <th style={{ textAlign: 'center' }}>Criada em</th>
+                <th style={{ textAlign: 'center' }}>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {matches.map((match, index) => (
+                <tr key={match.id}>
+                  <td>
+                    <div>
+                      <strong style={{ fontSize: '16px', color: '#2c3e50' }}>
+                        {match.teamA_name} vs {match.teamB_name}
+                      </strong>
+                      {match.state === 'finished' && match.final_map && (
+                        <div style={{ 
+                          marginTop: '5px', 
+                          fontSize: '14px', 
+                          color: '#27ae60',
+                          fontWeight: '600'
+                        }}>
+                          🏆 {match.final_map}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <span 
+                      style={{ 
+                        backgroundColor: getStateColor(match.state),
+                        color: 'white',
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        textTransform: 'uppercase'
+                      }}
+                    >
+                      {getStateText(match.state)}
+                    </span>
+                    {match.state === 'in_progress' && (
+                      <div style={{ 
+                        marginTop: '5px', 
+                        fontSize: '12px', 
+                        color: '#666' 
+                      }}>
+                        Vez: {match.current_turn === 'A' ? match.teamA_name : match.teamB_name}
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '14px', fontWeight: '600' }}>
+                      {match.bans_count}/{match.total_maps}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#666' }}>
+                      mapas banidos
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'center', fontSize: '14px' }}>
+                    {formatDate(match.created_at)}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <div className="action-buttons">
+                      <a 
+                        href={match.public_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="action-button observe"
+                      >
+                        📺 Observar
+                      </a>
+                      <a 
+                        href={match.teamA_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="action-button team-a"
+                      >
+                        ⚔️ {match.teamA_name.split(' ')[0]}
+                      </a>
+                      <a 
+                        href={match.teamB_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="action-button team-b"
+                      >
+                        ⚔️ {match.teamB_name.split(' ')[0]}
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
