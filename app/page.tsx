@@ -117,69 +117,165 @@ export default function Home() {
               {result.message}
             </div>
           )}
+
+          {/* Mapa Final Grande */}
+          <div style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+            padding: '40px',
+            borderRadius: '12px',
+            textAlign: 'center',
+            marginBottom: '30px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+          }}>
+            <h2 style={{ margin: '0 0 20px 0', fontSize: '28px' }}>🎮 Partida Configurada</h2>
+            <div style={{ 
+              fontSize: '24px', 
+              fontWeight: 'bold',
+              marginBottom: '10px'
+            }}>
+              {formData.teamA_name} vs {formData.teamB_name}
+            </div>
+            <div style={{ 
+              fontSize: '16px', 
+              opacity: 0.9
+            }}>
+              Pronto para começar o banimento de mapas!
+            </div>
+          </div>
           
-          <h2>Links da Partida</h2>
-          <div className="links-section">
-            <div className="link-item">
-              <div className="link-label">Página Pública (Acompanhamento):</div>
+          <h2>🔗 Links da Partida</h2>
+          <div style={{ 
+            display: 'grid', 
+            gap: '20px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'
+          }}>
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              padding: '20px',
+              borderRadius: '8px',
+              border: '2px solid #e9ecef'
+            }}>
+              <div style={{ 
+                fontSize: '16px', 
+                fontWeight: 'bold', 
+                marginBottom: '10px',
+                color: '#495057'
+              }}>
+                📺 Página Pública
+              </div>
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#6c757d', 
+                marginBottom: '15px' 
+              }}>
+                Para acompanhar o progresso
+              </div>
               <a 
                 href={result.public_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ 
                   display: 'block',
-                  padding: '8px',
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
+                  padding: '12px',
+                  backgroundColor: '#3498db',
+                  color: 'white',
+                  borderRadius: '6px',
                   textDecoration: 'none',
-                  color: '#3498db',
-                  border: '1px solid #bdc3c7',
-                  wordBreak: 'break-all'
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  transition: 'all 0.3s'
                 }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#2980b9'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#3498db'}
               >
-                {result.public_url}
+                Abrir Página Pública
               </a>
             </div>
             
-            <div className="link-item">
-              <div className="link-label">{formData.teamA_name} (Ação):</div>
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              padding: '20px',
+              borderRadius: '8px',
+              border: '2px solid #e9ecef'
+            }}>
+              <div style={{ 
+                fontSize: '16px', 
+                fontWeight: 'bold', 
+                marginBottom: '10px',
+                color: '#495057'
+              }}>
+                ⚔️ {formData.teamA_name}
+              </div>
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#6c757d', 
+                marginBottom: '15px' 
+              }}>
+                Link de ação para banir mapas
+              </div>
               <a 
                 href={result.teamA_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ 
                   display: 'block',
-                  padding: '8px',
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
+                  padding: '12px',
+                  backgroundColor: '#e74c3c',
+                  color: 'white',
+                  borderRadius: '6px',
                   textDecoration: 'none',
-                  color: '#3498db',
-                  border: '1px solid #bdc3c7',
-                  wordBreak: 'break-all'
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  transition: 'all 0.3s'
                 }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#c0392b'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#e74c3c'}
               >
-                {result.teamA_url}
+                Acessar {formData.teamA_name}
               </a>
             </div>
             
-            <div className="link-item">
-              <div className="link-label">{formData.teamB_name} (Ação):</div>
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              padding: '20px',
+              borderRadius: '8px',
+              border: '2px solid #e9ecef'
+            }}>
+              <div style={{ 
+                fontSize: '16px', 
+                fontWeight: 'bold', 
+                marginBottom: '10px',
+                color: '#495057'
+              }}>
+                ⚔️ {formData.teamB_name}
+              </div>
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#6c757d', 
+                marginBottom: '15px' 
+              }}>
+                Link de ação para banir mapas
+              </div>
               <a 
                 href={result.teamB_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ 
                   display: 'block',
-                  padding: '8px',
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
+                  padding: '12px',
+                  backgroundColor: '#27ae60',
+                  color: 'white',
+                  borderRadius: '6px',
                   textDecoration: 'none',
-                  color: '#3498db',
-                  border: '1px solid #bdc3c7',
-                  wordBreak: 'break-all'
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  transition: 'all 0.3s'
                 }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#229954'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#27ae60'}
               >
-                {result.teamB_url}
+                Acessar {formData.teamB_name}
               </a>
             </div>
           </div>
@@ -300,9 +396,6 @@ export default function Home() {
         </form>
       )}
 
-      <div style={{ marginTop: '40px', textAlign: 'center', color: '#7f8c8d' }}>
-        <p>Exemplo de página pública: <a href="/bans/exemplo-vs-teste" target="_blank">/bans/exemplo-vs-teste</a></p>
-      </div>
     </div>
   )
 }

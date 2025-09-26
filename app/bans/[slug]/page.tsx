@@ -176,6 +176,41 @@ export default function PublicMatchPage() {
             </div>
           ))}
         </div>
+
+        {match.bans.length > 0 && (
+          <div>
+            <h2>Mapas Banidos</h2>
+            <div className="maps-grid">
+              {match.bans.map((ban, index) => (
+                <div key={index} className="map-card banned">
+                  <div className="map-name" style={{ position: 'relative' }}>
+                    {ban.map}
+                    <div style={{
+                      position: 'absolute',
+                      top: '-5px',
+                      right: '-5px',
+                      backgroundColor: '#e74c3c',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '12px',
+                      fontWeight: 'bold'
+                    }}>
+                      ✕
+                    </div>
+                  </div>
+                  <div className="map-info">
+                    Banido por: {ban.by === 'A' ? match.teamA : match.teamB}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div style={{ marginTop: '20px', textAlign: 'center', color: '#7f8c8d' }}>
